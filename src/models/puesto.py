@@ -1,0 +1,45 @@
+from sqlalchemy import column, Integer, String, DateTime, ForeignKey
+from src.models import Base, Session
+
+class puesto(Base):
+    __tablename__ = 'puesto'
+
+    id_puesto = column(Integer, primary_key=True)
+    nombre_puesto = column(String(255), nullable=False)
+    direccion_puesto = column(String(255), nullable=True)
+    encargado_puesto = column(String(255), nullable=True)
+    numero_encargado = column(String(255), nullable=True)
+    nit_puesto = column(String(255), nullable=True)
+    email_puesto = column(String(255), nullable=True)
+    descripcion_puesto = column(String(255), nullable=True)
+    georef_puesto = column(String(255), nullable=True)
+    id_armamento_puesto = column(Integer, ForeignKey('armamento.id_armamento'), nullable=True)
+
+    def __init__(self, nombre_puesto, direccion_puesto=None, encargado_puesto=None, 
+                numero_encargado=None, nit_puesto=None, email_puesto=None, 
+                descripcion_puesto=None, georef_puesto=None, id_armamento_puesto=None):
+        self.nombre_puesto = nombre_puesto
+        self.direccion_puesto = direccion_puesto
+        self.encargado_puesto = encargado_puesto
+        self.numero_encargado = numero_encargado
+        self.nit_puesto = nit_puesto
+        self.email_puesto = email_puesto
+        self.descripcion_puesto = descripcion_puesto
+        self.georef_puesto = georef_puesto
+        self.id_armamento_puesto = id_armamento_puesto
+
+    def save(self):
+        Session.add(self)
+        Session.commit()
+
+    def delete(self):   
+        Session.delete(self)
+        Session.commit()
+    
+    def get():
+        puesto = Session.query(puesto).all()
+        return puesto
+    
+    def get_by_id(id_puesto):
+        puesto = Session.query(puesto).filter_by(id_puesto=id_puesto).first()
+        return puesto
