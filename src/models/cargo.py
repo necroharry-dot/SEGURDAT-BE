@@ -19,9 +19,9 @@ class Cargo(Base):
         Session.commit()
     
     def get():
-        cargo = Session.query(cargo).all()
+        cargo = Session.query(Cargo).all()
         return cargo
     
     def get_by_id(id_cargo):
-        cargo = Session.query(cargo).filter_by(id_cargo=id_cargo).first()
+        cargo = Session.query(Cargo).filter_by(id_cargo=id_cargo).first()
         return cargo
