@@ -1,11 +1,11 @@
-from sqlalchemy import column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from src.models import Base, Session    
 
-class tipo_armamento(Base):
+class Tipo_Armamento(Base):
     __tablename__ = 'tipo_armamento'
 
-    id_tipo_armamento = column(Integer, primary_key=True)
-    nombre = column(String(50), nullable=False)
+    id_tipo_armamento = Column(Integer, primary_key=True)
+    nombre = Column(String(50), nullable=False)
     
     def __init__(self, nombre):
         self.nombre = nombre

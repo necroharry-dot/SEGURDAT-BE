@@ -1,19 +1,21 @@
-from sqlalchemy import column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from src.models import Base, Session
 
-class puesto(Base):
+
+class Puesto(Base):
     __tablename__ = 'puesto'
 
-    id_puesto = column(Integer, primary_key=True)
-    nombre_puesto = column(String(255), nullable=False)
-    direccion_puesto = column(String(255), nullable=True)
-    encargado_puesto = column(String(255), nullable=True)
-    numero_encargado = column(String(255), nullable=True)
-    nit_puesto = column(String(255), nullable=True)
-    email_puesto = column(String(255), nullable=True)
-    descripcion_puesto = column(String(255), nullable=True)
-    georef_puesto = column(String(255), nullable=True)
-    id_armamento_puesto = column(Integer, ForeignKey('armamento.id_armamento'), nullable=True)
+    id_puesto = Column(Integer, primary_key=True)
+    nombre_puesto = Column(String(255), nullable=False)
+    direccion_puesto = Column(String(255), nullable=True)
+    encargado_puesto = Column(String(255), nullable=True)
+    numero_encargado = Column(String(255), nullable=True)
+    nit_puesto = Column(String(255), nullable=True)
+    email_puesto = Column(String(255), nullable=True)
+    descripcion_puesto = Column(String(255), nullable=True)
+    georef_puesto = Column(String(255), nullable=True)
+    id_armamento_puesto = Column(Integer, ForeignKey('armamento.id_armamento'), nullable=True)
+    id_comunicacion = Column(Integer, ForeignKey('comunicacion.id_comunicacion'), nullable=True)
 
     def __init__(self, nombre_puesto, direccion_puesto=None, encargado_puesto=None, 
                 numero_encargado=None, nit_puesto=None, email_puesto=None, 

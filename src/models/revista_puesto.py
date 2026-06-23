@@ -1,18 +1,24 @@
-from sqlalchemy import column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from src.models import Base, Session
+from src.models.armamento import Armamento
+from src.models.comunicacion import Comunicacion
+from src.models.puesto import Puesto 
+from src.models.usuarios import Usuarios
 
-class revista_puesto(Base):
+
+
+class Revista_puesto(Base):
     __tablename__ = 'revista_puesto'
 
-    id_revista_puesto = column(Integer, primary_key=True)
-    id_usuario = column(Integer, Integer, ForeignKey('usuario.id_usuario'), nullable=False)
-    id_tipo_armamento = column(Integer, ForeignKey('tipo_armamento.id_tipo_armamento'), nullable=False)
-    id_tipo_comunicacion = column(Integer, ForeignKey('tipo_comunicacion.id_tipo_comunicacion'), nullable=False)
-    obervaciones = column(String(255), nullable=True)
-    recomendaciones = column(String(255), nullable=True)
-    novedades = column(String(255), nullable=True)
-    geolocalizacion = column(String(255), nullable=True)
-    id_puesto = column(Integer, ForeignKey('puesto.id_puesto'), nullable=False)
+    id_revista_puesto = Column(Integer, primary_key=True)
+    id_usuario = Column(Integer, ForeignKey('usuarios.id_usuario'), nullable=False)
+    id_tipo_armamento = Column(Integer, ForeignKey('armamento.id_tipo_armamento'), nullable=False)
+    id_tipo_comunicacion = Column(Integer, ForeignKey('comunicacion.id_tipo_comunicacion'), nullable=False)
+    obervaciones = Column(String(255), nullable=True)
+    recomendaciones = Column(String(255), nullable=True)
+    novedades = Column(String(255), nullable=True)
+    geolocalizacion = Column(String(255), nullable=True)
+    id_puesto = Column(Integer, ForeignKey('puesto.id_puesto'), nullable=False)
 
     def __init__(self, id_revista_puesto, id_usuario, id_tipo_armamento, 
                  id_tipo_comunicacion, obervaciones=None, recomendaciones=None, 

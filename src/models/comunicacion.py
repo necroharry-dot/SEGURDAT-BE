@@ -1,17 +1,18 @@
-from sqlalchemy import column, Integer, String, DateTime, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from src.models import Base, Session
+from src.models.Tipo_de_comunicacion import Tipo_Comunicacion
 
-class comunicacion(Base):
+class Comunicacion(Base):
     __tablename__ = 'comunicacion'
 
-    id_comunicacion = column(Integer, primary_key=True)
-    id_tipo_comunicacion = column(Integer, ForeignKey('tipo_comunicacion.id_tipo_comunicacion'), nullable=False)
-    numero_serial = column(String(255), nullable=False) 
-    modelo = column(String(255), nullable=False)
-    imei = column(String(255), nullable=False)
-    estado = column(String(255), nullable=False)
-    fabricante = column(String(255), nullable=False)
-    simcard = column(String(255), nullable=False)
+    id_comunicacion = Column(Integer, primary_key=True)
+    id_tipo_comunicacion = Column(Integer, ForeignKey('tipo_comunicacion.id_tipo_comunicacion'), nullable=False)
+    numero_serial = Column(String(255), nullable=False) 
+    modelo = Column(String(255), nullable=False)
+    imei = Column(String(255), nullable=False)
+    estado = Column(String(255), nullable=False)
+    fabricante = Column(String(255), nullable=False)
+    simcard = Column(String(255), nullable=False)
 
     def __init__(self, id_tipo_comunicacion, numero_serial, modelo, imei, estado, fabricante, simcard):
         self.id_tipo_comunicacion = id_tipo_comunicacion
@@ -31,9 +32,9 @@ class comunicacion(Base):
         Session.commit()
     
     def get():
-        comunicacion = Session.query(comunicacion).all()
+        comunicacion = Session.query(Comunicacion).all()
         return comunicacion
     
     def get_by_id(id_comunicacion):
-        comunicacion = Session.query(comunicacion).filter_by(id_comunicacion=id_comunicacion).first()
+        comunicacion = Session.query(Comunicacion).filter_by(id_comunicacion=id_comunicacion).first()
         return comunicacion

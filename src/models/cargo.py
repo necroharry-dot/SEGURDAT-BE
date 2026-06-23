@@ -1,11 +1,11 @@
-from sqlalchemy import column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from src.models import Base, Session
 
-class cargo(Base):
+class Cargo(Base):
     __tablename__ = 'cargo'
 
-    id_cargo = column(Integer, primary_key=True)
-    nombre_cargo = column(String(255), nullable=False)
+    id_cargo = Column(Integer, primary_key=True)
+    nombre_cargo = Column(String(255), nullable=False)
 
     def __init__(self, nombre_cargo):
         self.nombre_cargo = nombre_cargo

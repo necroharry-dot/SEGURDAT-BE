@@ -1,26 +1,25 @@
-from sqlalchemy import column, Integer, String, DateTime, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine
 from src.models import Base, Session
+from src.models.tipo_armamento import Tipo_Armamento
 
 class Armamento(Base):
     __tablename__ = 'armamento'
 
-    id_armamento = column(Integer, primary_key=True)
-    tipo_armamento = column(String(255), nullable=False)
-    numero_serial = column(String(255), nullable=False) 
-    numero_salvo = column(String(255), nullable=False)
-    fecha_vencimiento = column(DateTime, nullable=False)
-    estado = column(String(255), nullable=False)
-    calibre = column(String(255), nullable=False)
-    fabricante = column(String(255), nullable=False)
-    numero_cartuchos = column(Integer, nullable=False)
-    id_tipo_armamento = column(Integer, ForeignKey('tipo_armamento.id_tipo_armamento'), nullable=False)
+    id_armamento = Column(Integer, primary_key=True)
+    numero_serial = Column(String(255), nullable=False) 
+    numero_salvo = Column(String(255), nullable=False)
+    fecha_vencimiento = Column(DateTime, nullable=False)
+    estado = Column(String(255), nullable=False)
+    calibre = Column(String(255), nullable=False)
+    fabricante = Column(String(255), nullable=False)
+    numero_cartuchos = Column(Integer, nullable=False)
+    id_tipo_armamento = Column(Integer, ForeignKey('tipo_armamento.id_tipo_armamento'), nullable=False)
 
 
-    def __init__(self, tipo_armamento, numero_serial, numero_salvo, 
+    def __init__(self, numero_serial, numero_salvo, 
                  fecha_vencimiento, estado, calibre, fabricante, 
                  numero_cartuchos, id_tipo_armamento):
         
-        self.tipo_armamento = tipo_armamento
         self.numero_serial = numero_serial
         self.numero_salvo = numero_salvo
         self.fecha_vencimiento = fecha_vencimiento
@@ -45,3 +44,6 @@ class Armamento(Base):
     def get_by_id(id_armamento):
         armamento = Session.query(Armamento).filter_by(id_armamento=id_armamento).first()
         return armamento
+    
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
