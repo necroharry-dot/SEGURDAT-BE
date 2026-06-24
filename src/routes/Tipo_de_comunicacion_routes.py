@@ -49,6 +49,8 @@ def create_tipo_comunicacion():
         'message': 'Tipo de comunicacion creado exitosamente'
     }), 201
 
+
+
 @tipo_comunicacion_bp.route('/<int:id_tipo_comunicacion>', methods=['PUT'])
 def update_tipo_comunicacion(id_tipo_comunicacion):
     tipo_comunicacion = Tipo_Comunicacion.get_by_id(id_tipo_comunicacion)

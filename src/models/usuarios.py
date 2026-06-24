@@ -45,7 +45,7 @@ class Usuarios(Base):
         Session.commit()
     
     def get():
-        usuarios = Session.query(usuarios).all()
+        usuarios = Session.query(Usuarios).all()
         return usuarios
     
     def get_by_id(id_usuario):
