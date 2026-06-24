@@ -39,9 +39,12 @@ class Puesto(Base):
         Session.commit()
     
     def get():
-        puesto = Session.query(puesto).all()
+        puesto = Session.query(Puesto).all()
         return puesto
     
     def get_by_id(id_puesto):
-        puesto = Session.query(puesto).filter_by(id_puesto=id_puesto).first()
+        puesto = Session.query(Puesto).filter_by(id_puesto=id_puesto).first()
         return puesto
+    
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

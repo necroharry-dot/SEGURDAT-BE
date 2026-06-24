@@ -15,7 +15,7 @@ for bp in all_blueprints:
     print(bp)
     url_prefix=f"{prefix}/{bp.name}"
     print(url_prefix)
-app.register_blueprint(bp, url_prefix=url_prefix)
+    app.register_blueprint(bp, url_prefix=url_prefix)
 
 if __name__ == '__main__':
     app.run(debug=True)
