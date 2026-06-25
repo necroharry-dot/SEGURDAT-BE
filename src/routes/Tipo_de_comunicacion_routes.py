@@ -46,7 +46,8 @@ def create_tipo_comunicacion():
     tipo_comunicacion.save()
 
     return jsonify({
-        'message': 'Tipo de comunicacion creado exitosamente'
+        'message': 'Tipo de comunicacion creado exitosamente',
+        'tipo_comunicacion': tipo_comunicacion.to_dict()
     }), 201
 
 
@@ -68,7 +69,8 @@ def update_tipo_comunicacion(id_tipo_comunicacion):
         tipo_comunicacion.save()
 
         return jsonify({
-            'message': 'Tipo de comunicacion actualizado exitosamente'
+            'message': 'Tipo de comunicacion actualizado exitosamente',
+            'tipo_comunicacion': tipo_comunicacion.to_dict()
         }), 200
 
     return jsonify({

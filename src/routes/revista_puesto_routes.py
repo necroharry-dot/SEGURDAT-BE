@@ -77,7 +77,7 @@ def create_revista_puesto():
 
     return jsonify({
         'message': 'Revista de puesto creada exitosamente',
-        'id_revista_puesto': revista_puesto.id_revista_puesto
+        'revista_puesto': revista_puesto.to_dict()
     }), 201
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['PUT'])
@@ -116,5 +116,5 @@ def update_revista_puesto(id_revista_puesto):
     
 
     revista_puesto.save()
-    return jsonify({'message': 'Revista de puesto actualizada exitosamente'}), 200
+    return jsonify({'message': 'Revista de puesto actualizada exitosamente', 'revista_puesto': revista_puesto.to_dict()}), 200
 

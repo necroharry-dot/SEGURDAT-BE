@@ -108,7 +108,7 @@ def create_usuario():
     
 
     usuario.save()
-    return jsonify({'message': 'Usuario creado exitosamente'}), 201
+    return jsonify({'message': 'Usuario creado exitosamente', 'usuario': usuario.to_dict()}), 201
 
 @usuarios_bp.route('/<int:id_usuario>', methods=['PUT'])
 def update_usuario(id_usuario):
@@ -169,6 +169,6 @@ def update_usuario(id_usuario):
         return jsonify({'error': 'La contraseña no puede estar vacía'}), 400
     
     usuario.save()
-    return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
+    return jsonify({'message': 'Usuario actualizado exitosamente', 'usuario': usuario.to_dict()}), 200
     
     

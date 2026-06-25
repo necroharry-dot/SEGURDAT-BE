@@ -50,7 +50,8 @@ def create_tipo_armamento():
     tipo_armamento.save()
 
     return jsonify({
-        'message': 'Tipo de armamento creado exitosamente'
+        'message': 'Tipo de armamento creado exitosamente',
+        'tipo_armamento': tipo_armamento.to_dict()
     }), 201
 
 
@@ -77,7 +78,8 @@ def update_tipo_armamento(id_tipo_armamento):
     tipo_armamento.save()
 
     return jsonify({
-        'message': 'Tipo de armamento actualizado exitosamente'
+        'message': 'Tipo de armamento actualizado exitosamente',
+        'tipo_armamento': tipo_armamento.to_dict()
     }), 200
 
 

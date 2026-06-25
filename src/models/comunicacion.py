@@ -38,3 +38,6 @@ class Comunicacion(Base):
     def get_by_id(id_comunicacion):
         comunicacion = Session.query(Comunicacion).filter_by(id_comunicacion=id_comunicacion).first()
         return comunicacion
+    
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}    

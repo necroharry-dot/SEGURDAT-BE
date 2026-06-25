@@ -21,13 +21,8 @@ class Revista_puesto(Base):
     def __init__(
         self,
         id_usuario,
-        id_tipo_armamento,
-        id_tipo_comunicacion,
-        obervaciones=None,
-        recomendaciones=None,
-        novedades=None,
-        geolocalizacion=None,
-        id_puesto=None
+        id_tipo_armamento,id_tipo_comunicacion,obervaciones=None,
+        recomendaciones=None,novedades=None,geolocalizacion=None,id_puesto=None
     ):
         self.id_usuario = id_usuario
         self.id_tipo_armamento = id_tipo_armamento
@@ -55,3 +50,5 @@ class Revista_puesto(Base):
         return Session.query(Revista_puesto)\
             .filter_by(id_revista_puesto=id_revista_puesto)\
             .first()
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

@@ -71,7 +71,7 @@ def create_comunicacion():
         return jsonify({'error': 'La SIM card no puede estar vacía'}), 400
     
     comunicacion.save()
-    return jsonify({'message': 'Comunicacion creada exitosamente'}), 201
+    return jsonify({'message': 'Comunicacion creada exitosamente', 'comunicacion': comunicacion.to_dict()}), 201
 
 @comunicacion_bp.route('/<int:id_comunicacion>', methods=['PUT'])
 def update_comunicacion(id_comunicacion):
@@ -109,4 +109,4 @@ def update_comunicacion(id_comunicacion):
         return jsonify({'error': 'La SIM card no puede estar vacía'}), 400
 
     comunicacion.save()
-    return jsonify({'message': 'Comunicacion actualizada exitosamente'}), 200
+    return jsonify({'message': 'Comunicacion actualizada exitosamente', 'comunicacion': comunicacion.to_dict()}), 200

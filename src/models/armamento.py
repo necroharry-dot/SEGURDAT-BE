@@ -45,5 +45,7 @@ class Armamento(Base):
         armamento = Session.query(Armamento).filter_by(id_armamento=id_armamento).first()
         return armamento
     
+    
+    
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}

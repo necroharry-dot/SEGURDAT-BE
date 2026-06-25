@@ -78,7 +78,7 @@ def create_puesto():
         return jsonify({'error': 'La descripción del puesto no puede estar vacía'}), 400
     
     puesto.save()
-    return jsonify({'message': 'Puesto creado exitosamente'}), 201
+    return jsonify({'message': 'Puesto creado exitosamente', 'puesto': puesto.to_dict()}), 201
 
 @puesto_bp.route('/<int:id_puesto>', methods=['PUT'])
 def update_puesto(id_puesto):
@@ -117,7 +117,7 @@ def update_puesto(id_puesto):
             return jsonify({'error': 'La descripción del puesto no puede estar vacía'}), 400
 
         puesto.save()
-        return jsonify({'message': 'Puesto actualizado exitosamente'}), 200
+        return jsonify({'message': 'Puesto actualizado exitosamente', 'puesto': puesto.to_dict()}), 200
     else:
         return jsonify({'error': 'Puesto no encontrado'}), 404
     

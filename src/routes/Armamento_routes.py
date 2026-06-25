@@ -74,7 +74,7 @@ def create_armamento():
         return jsonify({'error': 'El fabricante no puede estar vacío'}), 400
     
     armamento.save()
-    return jsonify({'message': 'Armamento creado exitosamente'}), 201
+    return jsonify({'message': 'Armamento creado exitosamente', 'armamento': armamento.to_dict()}), 201
 
 
 @armamento_bp.route('/<int:id_armamento>', methods=['PUT'])
@@ -113,5 +113,5 @@ def update_armamento(id_armamento):
         return jsonify({'error': 'El fabricante no puede estar vacío'}), 400
 
     armamento.save()
-    return jsonify({'message': 'Armamento actualizado exitosamente'}), 200
+    return jsonify({'message': 'Armamento actualizado exitosamente', 'armamento': armamento.to_dict()}), 200
     

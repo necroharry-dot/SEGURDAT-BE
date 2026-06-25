@@ -51,3 +51,6 @@ class Usuarios(Base):
     def get_by_id(id_usuario):
         usuario = Session.query(Usuarios).filter_by(id_usuario=id_usuario).first()
         return usuario
+    
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

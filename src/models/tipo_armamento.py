@@ -27,3 +27,5 @@ class Tipo_Armamento(Base):
         return Session.query(Tipo_Armamento)\
             .filter_by(id_tipo_armamento=id_tipo_armamento)\
             .first()
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

@@ -29,7 +29,4 @@ class Tipo_Comunicacion(Base):
             .first()
 
     def to_dict(self):
-        return {
-            "id_tipo_comunicacion": self.id_tipo_comunicacion,
-            "nombre_Tcomunicacion": self.nombre_Tcomunicacion
-        }
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

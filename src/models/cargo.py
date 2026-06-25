@@ -25,3 +25,6 @@ class Cargo(Base):
     def get_by_id(id_cargo):
         cargo = Session.query(Cargo).filter_by(id_cargo=id_cargo).first()
         return cargo
+    
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}    

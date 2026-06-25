@@ -32,7 +32,7 @@ def create_cargo():
         nombre_cargo=data['nombre_cargo'],
     )
     cargo.save()
-    return jsonify({'message': 'Cargo creado exitosamente'}), 201
+    return jsonify({'message': 'Cargo creado exitosamente', 'cargo': cargo.to_dict()}), 201
 
 @cargo_bp.route('/<int:id_cargo>', methods=['PUT'])
 def update_cargo(id_cargo):
@@ -41,6 +41,6 @@ def update_cargo(id_cargo):
         data = request.get_json()
         cargo.nombre_cargo = data['nombre_cargo']
         cargo.save()
-        return jsonify({'message': 'Cargo actualizado exitosamente'}), 200
+        return jsonify({'message': 'Cargo actualizado exitosamente', 'cargo': cargo.to_dict()}), 200
     else:
         return jsonify({'error': 'Cargo no encontrado'}), 404
