@@ -1,22 +1,31 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.exc import IntegrityError
 from src.models import Base, Session
 
 class Tipo_Comunicacion(Base):
     __tablename__ = 'tipo_comunicacion'
 
     id_tipo_comunicacion = Column(Integer, primary_key=True)
-    nombre_Tcomunicacion = Column(String(50), nullable=False)
+    nombre_Tcomunicacion = Column(String(50), unique=True, nullable=False)
 
     def __init__(self, nombre):
         self.nombre_Tcomunicacion = nombre
 
     def save(self):
-        Session.add(self)
-        Session.commit()
+        try:
+            Session.add(self)
+            Session.commit()
+        except IntegrityError:
+            Session.rollback()
+            raise
 
     def delete(self):
-        Session.delete(self)
-        Session.commit()
+        try:
+            Session.delete(self)
+            Session.commit()
+        except IntegrityError:
+            Session.rollback()
+            raise
 
     @staticmethod
     def get():

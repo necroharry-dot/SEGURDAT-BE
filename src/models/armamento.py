@@ -6,8 +6,8 @@ class Armamento(Base):
     __tablename__ = 'armamento'
 
     id_armamento = Column(Integer, primary_key=True)
-    numero_serial = Column(String(255), nullable=False) 
-    numero_salvo = Column(String(255), nullable=False)
+    numero_serial = Column(String(255), unique=True, nullable=False) 
+    numero_salvo = Column(String(255), unique=True, nullable=False)
     fecha_vencimiento = Column(DateTime, nullable=False)
     estado = Column(String(255), nullable=False)
     calibre = Column(String(255), nullable=False)
@@ -45,7 +45,15 @@ class Armamento(Base):
         armamento = Session.query(Armamento).filter_by(id_armamento=id_armamento).first()
         return armamento
     
+    def get_by_numero_serial(numero_serial):
+        return Session.query(Armamento).filter_by(numero_serial=numero_serial).first()
     
-    
+    def get_by_numero_salvo(numero_salvo):
+        return Session.query(Armamento).filter_by(numero_salvo=numero_salvo).first()
+
+
+    def get_by_numero_salvo(numero_salvo):
+        return Session.query(Armamento).filter_by(numero_salvo=numero_salvo).first()
+        
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}

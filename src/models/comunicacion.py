@@ -1,18 +1,19 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
+from sqlalchemy.exc import IntegrityError
 from src.models import Base, Session
-from src.models.Tipo_de_comunicacion import Tipo_Comunicacion
+from src.models.tipo_comunicacion import Tipo_Comunicacion
 
 class Comunicacion(Base):
     __tablename__ = 'comunicacion'
 
     id_comunicacion = Column(Integer, primary_key=True)
     id_tipo_comunicacion = Column(Integer, ForeignKey('tipo_comunicacion.id_tipo_comunicacion'), nullable=False)
-    numero_serial = Column(String(255), nullable=False) 
+    numero_serial = Column(String(255), unique=True, nullable=False) 
     modelo = Column(String(255), nullable=False)
-    imei = Column(String(255), nullable=False)
+    imei = Column(String(255), unique=True, nullable=False)
     estado = Column(String(255), nullable=False)
     fabricante = Column(String(255), nullable=False)
-    simcard = Column(String(255), nullable=False)
+    simcard = Column(String(255), unique=True, nullable=False)
 
     def __init__(self, id_tipo_comunicacion, numero_serial, modelo, imei, estado, fabricante, simcard):
         self.id_tipo_comunicacion = id_tipo_comunicacion
@@ -24,13 +25,21 @@ class Comunicacion(Base):
         self.simcard = simcard
 
     def save(self):
-        Session.add(self)
-        Session.commit()
+        try:
+            Session.add(self)
+            Session.commit()
+        except IntegrityError:
+            Session.rollback()
+            raise
 
-    def delete(self):   
-        Session.delete(self)
-        Session.commit()
-    
+    def delete(self):
+        try:
+            Session.delete(self)
+            Session.commit()
+        except IntegrityError:
+            Session.rollback()
+            raise
+            
     def get():
         comunicacion = Session.query(Comunicacion).all()
         return comunicacion
@@ -40,4 +49,4 @@ class Comunicacion(Base):
         return comunicacion
     
     def to_dict(self):
-        return {column.name: getattr(self, column.name) for column in self.__table__.columns}    
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}

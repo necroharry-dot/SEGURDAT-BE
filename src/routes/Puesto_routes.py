@@ -117,7 +117,13 @@ def update_puesto(id_puesto):
             return jsonify({'error': 'La descripción del puesto no puede estar vacía'}), 400
 
         puesto.save()
-        return jsonify({'message': 'Puesto actualizado exitosamente', 'puesto': puesto.to_dict()}), 200
-    else:
-        return jsonify({'error': 'Puesto no encontrado'}), 404
+    from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+    try:
+        puesto.save()
+    except IntegrityError:
+        return jsonify({'error': 'El NIT ya existe o el armamento indicado no es válido'}), 409
+    except SQLAlchemyError:
+        return jsonify({'error': 'Error al guardar el puesto en la base de datos'}), 500
+
+    return jsonify({'message': 'Puesto creado exitosamente', 'puesto': puesto.to_dict()}), 201
     

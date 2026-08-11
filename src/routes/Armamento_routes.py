@@ -73,6 +73,19 @@ def create_armamento():
     if armamento.fabricante == '':
         return jsonify({'error': 'El fabricante no puede estar vacío'}), 400
     
+    serial = Armamento.get_by_numero_serial(armamento.numero_serial)
+    if serial:
+        return jsonify({
+            'error': 'No puedes ingresar este número de serial ya que se encuentra registrado en la base de datos.'
+        }), 400
+    
+    salvo = Armamento.get_by_numero_salvo(armamento.numero_salvo)
+    if salvo:
+        return jsonify({
+            'error': 'este numero de salvoconducto ya se encuentra registrado en la base de datos.'
+        })
+
+
     armamento.save()
     return jsonify({'message': 'Armamento creado exitosamente', 'armamento': armamento.to_dict()}), 201
 
@@ -103,6 +116,20 @@ def update_armamento(id_armamento):
     except ValueError:
         return jsonify({'error': 'El calibre debe ser un número'}), 400
     
+    
+    serial = Armamento.get_by_numero_serial(armamento.numero_serial)
+    if serial and serial.id_armamento != id_armamento:
+        return jsonify({
+            'error': 'No puedes ingresar este número de serial ya que se encuentra registrado en la base de datos.'
+        }), 400
+
+    salvo = Armamento.get_by_numero_salvo(armamento.numero_salvo)
+    if salvo and salvo.id_armamento != id_armamento:
+        return jsonify({
+            'error': 'este numero de salvoconducto ya se encuentra registrado en la base de datos.'
+        }), 400
+
+
     if armamento.numero_serial == '':
         return jsonify({'error': 'El número de serial no puede estar vacío'}), 400
     if armamento.numero_salvo == '':
@@ -111,6 +138,9 @@ def update_armamento(id_armamento):
         return jsonify({'error': 'El estado no puede estar vacío'}), 400
     if armamento.fabricante == '':
         return jsonify({'error': 'El fabricante no puede estar vacío'}), 400
+
+
+ 
 
     armamento.save()
     return jsonify({'message': 'Armamento actualizado exitosamente', 'armamento': armamento.to_dict()}), 200

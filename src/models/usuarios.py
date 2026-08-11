@@ -8,7 +8,7 @@ class Usuarios(Base):
 
     id_usuario = Column(Integer, primary_key=True)
     nombre = Column(String(255), nullable=False)
-    documento_identidad = Column(String(255), nullable=False)
+    documento_identidad = Column(String(255), unique=True, nullable=False)
     celular = Column(String(255), nullable=False)
     fecha_nacimiento = Column(DateTime, nullable=False)
     edad = Column(Integer, nullable=False)
@@ -17,8 +17,8 @@ class Usuarios(Base):
     eps = Column(String(255), nullable=False)
     fondo_pension = Column(String(255), nullable=False)
     id_cargo = Column(Integer, ForeignKey('cargo.id_cargo'), nullable=False)
-    usuario = Column(String(255), nullable=False)
-    correo_electronico = Column(String(255), nullable=False)
+    usuario = Column(String(255), unique=True, nullable=False)
+    correo_electronico = Column(String(255),unique=True, nullable=False)
     contrasena = Column(String(255), nullable=False)
 
     def __init__(self, nombre, documento_identidad, celular, fecha_nacimiento, edad, direccion, fecha_ingreso, eps, fondo_pension, id_cargo, usuario, correo_electronico, contrasena):

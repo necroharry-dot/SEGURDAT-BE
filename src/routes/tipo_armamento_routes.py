@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import IntegrityError
 from src.models.tipo_armamento import Tipo_Armamento
 
 tipo_armamento_bp = Blueprint('tipo_armamento', __name__)
@@ -47,7 +48,12 @@ def create_tipo_armamento():
 
     tipo_armamento = Tipo_Armamento(nombre=nombre)
 
-    tipo_armamento.save()
+    try:
+        tipo_armamento.save()
+    except IntegrityError:
+        return jsonify({
+            'error': 'Ya existe un tipo de armamento con ese nombre'
+        }), 409
 
     return jsonify({
         'message': 'Tipo de armamento creado exitosamente',
