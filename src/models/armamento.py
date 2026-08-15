@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine,func
 from src.models import Base, Session
 from src.models.tipo_armamento import Tipo_Armamento
 
@@ -57,3 +57,9 @@ class Armamento(Base):
         
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+    def paginate(page=1, per_page=5):
+        total = (Session.query(func.count(Armamento.id_armamento)).scalar())
+        
+        armamento = Session.query(Armamento).offset ((page - 1) * per_page).limit(per_page).all()
+        return armamento, total

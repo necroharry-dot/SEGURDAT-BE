@@ -6,6 +6,7 @@ from .tipo_armamento_routes import tipo_armamento_bp
 from .Tipo_de_comunicacion_routes import tipo_comunicacion_bp
 from .usuarios_routes import usuarios_bp
 from .revista_puesto_routes import revista_puesto_bp
+from .auth_routes import auth_bp
 
 
 
@@ -17,5 +18,6 @@ all_blueprints = [
     tipo_armamento_bp,
     tipo_comunicacion_bp,
     usuarios_bp,
-    revista_puesto_bp
+    revista_puesto_bp,
+    auth_bp
 ]

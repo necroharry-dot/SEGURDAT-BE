@@ -1,11 +1,32 @@
 from flask import Blueprint, jsonify, request
 from src.models.usuarios import Usuarios
+from src.utils.auth import token_requerido
 
 usuarios_bp = Blueprint('usuarios', __name__)
 
 @usuarios_bp.route('/', methods=['GET'])
+@token_requerido
 def get_usuarios():
-    usuarios = Usuarios.get()
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=5, type=int)
+
+
+    usuarios, total = Usuarios.paginate(page=page, per_page=per_page)
+
+    total_pages = (total + per_page - 1) // per_page  # Calcular el número total de páginas
+
+    return jsonify({
+        'data': [usuario.to_dict() for usuario in usuarios],
+        'meta': {
+            'page': page,
+            'per_page': per_page,
+            'total': total,
+            'total_pages': total_pages,
+            'has_next': page < total_pages,
+            'has_prev': page > 1
+        }
+        }), 200
+
     usuarios_list = []
     for usuario in usuarios:
         usuarios_list.append({

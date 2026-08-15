@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, func
 from sqlalchemy.exc import IntegrityError
 from src.models import Base, Session
 
@@ -39,3 +39,10 @@ class Tipo_Comunicacion(Base):
 
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+    @staticmethod
+    def paginate(page=1, per_page=5):
+        total = (Session.query(func.count(Tipo_Comunicacion.id_tipo_comunicacion)).scalar())
+        tipo_comunicacion = Session.query(Tipo_Comunicacion).offset((page - 1) * per_page).limit(per_page).all()
+        return tipo_comunicacion, total
+        

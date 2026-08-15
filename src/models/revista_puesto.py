@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy.exc import SQLAlchemyError
 from src.models import Base, Session
 from src.models.armamento import Armamento
 from src.models.comunicacion import Comunicacion
@@ -52,3 +53,8 @@ class Revista_puesto(Base):
             .first()
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+    def paginate(page=1, per_page=5):
+        total = (Session.query(func.count(Revista_puesto.id_revista_puesto)).scalar())
+        revista_puesto = Session.query(Revista_puesto).offset((page - 1) * per_page).limit(per_page).all()
+        return revista_puesto, total

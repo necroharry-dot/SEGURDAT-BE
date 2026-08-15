@@ -1,11 +1,31 @@
 from flask import Blueprint, jsonify, request
 from src.models.revista_puesto import Revista_puesto
+from src.utils.auth import token_requerido, cargo_requerido
 
 revista_puesto_bp = Blueprint('revista_puesto', __name__)
 
 @revista_puesto_bp.route('/', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
 def get_revista_puesto():
-    revista_puesto = Revista_puesto.get()
+
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=5, type=int)
+    
+    revista_puesto, total = Revista_puesto.paginate(page, per_page)
+
+    total_pages = (total + per_page - 1) // per_page  # Calcular el número total de páginas
+
+    return jsonify({
+        'data': [revista.to_dict() for revista in revista_puesto],
+        'total': total,
+        'total_pages': total_pages,
+        'page': page,
+        'per_page': per_page,
+        'has_next': page < total_pages,
+        'has_prev': page > 1
+    }), 200
+
     revista_puesto_list = []
     for revista in revista_puesto:
         revista_puesto_list.append({
@@ -22,6 +42,8 @@ def get_revista_puesto():
     return jsonify(revista_puesto_list), 200
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
 def get_revista_puesto_by_id(id_revista_puesto):
     revista_puesto = Revista_puesto.get_by_id(id_revista_puesto)
     if revista_puesto:
@@ -41,6 +63,8 @@ def get_revista_puesto_by_id(id_revista_puesto):
         return jsonify({'error': 'Revista de puesto no encontrada'}), 404
 
 @revista_puesto_bp.route('/', methods=['POST'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
 def create_revista_puesto():
     data = request.get_json()
 
@@ -81,6 +105,8 @@ def create_revista_puesto():
     }), 201
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['PUT'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
 def update_revista_puesto(id_revista_puesto):
     revista_puesto = Revista_puesto.get_by_id(id_revista_puesto)
     if not revista_puesto:

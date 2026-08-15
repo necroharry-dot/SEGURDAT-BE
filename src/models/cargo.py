@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey,func
 from sqlalchemy.exc import IntegrityError
 from src.models import Base, Session
 
@@ -37,3 +37,10 @@ class Cargo(Base):
 
     def to_dict(self):
         return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
+    def paginate(page=1, per_page=5):
+        total = (Session.query(func.count(Cargo.id_cargo)).scalar())
+
+        cargos = Session.query(Cargo).offset((page - 1) * per_page).limit(per_page).all()
+        return cargos, total
+    

@@ -1,12 +1,32 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from src.models.comunicacion import Comunicacion
+from src.utils.auth import token_requerido, cargo_requerido
 
 comunicacion_bp = Blueprint('comunicacion', __name__)
 
 @comunicacion_bp.route('/', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Getente'])
 def get_comunicacion():
-    comunicacion = Comunicacion.get()
+
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=5, type=int)
+
+    comunicacion, total = Comunicacion.paginate(page, per_page)
+
+    total_pages = (total + per_page - 1) // per_page  # Calcular el número total de páginas
+
+    return jsonify({
+        'data': [comunicacion.to_dict() for comunicacion in comunicacion],
+        'total': total,
+        'total_pages': total_pages,
+        'page': page,
+        'per_page': per_page,
+        'has_next': page < total_pages,
+        'has_prev': page > 1
+    }), 200
+
     comunicacion_list = []
     for comunicacion in comunicacion:
         comunicacion_list.append({
@@ -23,6 +43,8 @@ def get_comunicacion():
 
 
 @comunicacion_bp.route('/<int:id_comunicacion>', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Getente', 'Vigilante'])
 def get_comunicacion_by_id(id_comunicacion):
     comunicacion = Comunicacion.get_by_id(id_comunicacion)
     if comunicacion:
@@ -41,6 +63,8 @@ def get_comunicacion_by_id(id_comunicacion):
         return jsonify({'error': 'Comunicacion no encontrada'}), 404
     
 @comunicacion_bp.route('/', methods=['POST'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Getente'])
 def create_comunicacion():
     data = request.get_json()
     comunicacion = Comunicacion(
@@ -79,6 +103,8 @@ def create_comunicacion():
     return jsonify({'message': 'Comunicacion creada exitosamente', 'comunicacion': comunicacion.to_dict()}), 201
 
 @comunicacion_bp.route('/<int:id_comunicacion>', methods=['PUT'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Getente'])
 def update_comunicacion(id_comunicacion):
     comunicacion = Comunicacion.get_by_id(id_comunicacion)
     if not comunicacion:

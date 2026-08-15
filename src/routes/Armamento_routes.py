@@ -1,11 +1,31 @@
 from flask import Blueprint, jsonify, request
 from src.models.armamento import Armamento
+from src.utils.auth import token_requerido, cargo_requerido
 
 armamento_bp = Blueprint('armamento', __name__)
 
 @armamento_bp.route('/', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Administrador', 'Supervisor', 'Gerente'])
 def get_armamento():
-    armamento = Armamento.get()
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=5, type=int)
+
+    armamento, total = Armamento.paginate(page=page, per_page=per_page)
+
+    total_pages = (total + per_page - 1) // per_page  # Calcular el número total de páginas
+    return jsonify({
+        'data': [armamento.to_dict() for armamento in armamento],
+        'meta': {
+            'page': page,
+            'per_page': per_page,
+            'total': total,
+            'total_pages': total_pages,
+            'has_next': page < total_pages,
+            'has_prev': page > 1
+        }
+    }), 200
+
     armamento_list = []
     for armamento in armamento:
         armamento_list.append({
@@ -22,6 +42,8 @@ def get_armamento():
     return jsonify(armamento_list), 200
 
 @armamento_bp.route('/<int:id_armamento>', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Administrador', 'Supervisor', 'Gerente'])
 def get_armamento_by_id(id_armamento):
     armamento = Armamento.get_by_id(id_armamento)
     if armamento:
@@ -41,6 +63,8 @@ def get_armamento_by_id(id_armamento):
         return jsonify({'error': 'Armamento no encontrado'}), 404
 
 @armamento_bp.route('/', methods=['POST'])
+@token_requerido
+@cargo_requerido(['Administrador', 'Supervisor', 'Gerente'])
 def create_armamento():
     data = request.get_json()
     armamento = Armamento(
@@ -91,6 +115,8 @@ def create_armamento():
 
 
 @armamento_bp.route('/<int:id_armamento>', methods=['PUT'])
+@token_requerido
+@cargo_requerido(['Administrador', 'Supervisor', 'Gerente'])
 def update_armamento(id_armamento):
     armamento = Armamento.get_by_id(id_armamento)
     if not armamento:

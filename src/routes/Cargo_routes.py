@@ -1,12 +1,35 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from src.models.cargo import Cargo
+from src.utils.auth import token_requerido, cargo_requerido
 
 cargo_bp = Blueprint('cargo', __name__)
 
 @cargo_bp.route('/', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Getente', 'Coordinador', 'Administrador', 'Supervisor'])
 def get_cargo():
-    cargos = Cargo.get()
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=5, type=int)
+
+    cargos, total = Cargo.paginate(page=page, per_page=per_page)
+
+    total_pages = (total + per_page - 1) // per_page  # Calcular el número total de páginas
+
+    return jsonify({
+        'data': [cargo.to_dict() for cargo in cargos],
+        'meta': {
+            'page': page,
+            'per_page': per_page,
+            'total': total,
+            'total_pages': total_pages,
+            'has_next': page < total_pages,
+            'has_prev': page > 1
+        }
+    }), 200
+
+
+
     cargo_list = []
     for cargo in cargos:
         cargo_list.append({
@@ -17,6 +40,8 @@ def get_cargo():
     return jsonify(cargo_list), 200
 
 @cargo_bp.route('/<int:id_cargo>', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Getente', 'Coordinador', 'Administrador', 'Supervisor'])
 def get_cargo_by_id(id_cargo):
     cargo = Cargo.get_by_id(id_cargo)
     if cargo:
@@ -29,6 +54,8 @@ def get_cargo_by_id(id_cargo):
         return jsonify({'error': 'Cargo no encontrado'}), 404
 
 @cargo_bp.route('/', methods=['POST'])
+@token_requerido
+@cargo_requerido(['Getente', 'Coordinador', 'Administrador'])
 def create_cargo():
     data = request.get_json()
 
@@ -47,6 +74,8 @@ def create_cargo():
     return jsonify({'message': 'Cargo creado exitosamente', 'cargo': cargo.to_dict()}), 201
 
 @cargo_bp.route('/<int:id_cargo>', methods=['PUT'])
+@token_requerido
+@cargo_requerido(['Getente', 'Coordinador', 'Administrador'])
 def update_cargo(id_cargo):
     cargo = Cargo.get_by_id(id_cargo)
     if not cargo:
@@ -68,6 +97,8 @@ def update_cargo(id_cargo):
     return jsonify({'message': 'Cargo actualizado exitosamente', 'cargo': cargo.to_dict()}), 200
 
 @cargo_bp.route('/<int:id_cargo>', methods=['DELETE'])
+@token_requerido
+@cargo_requerido(['Getente', 'Coordinador', 'Administrador'])
 def delete_cargo(id_cargo):
     cargo = Cargo.get_by_id(id_cargo)
     if not cargo:

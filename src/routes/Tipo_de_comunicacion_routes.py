@@ -2,13 +2,30 @@ from sqlalchemy.exc import IntegrityError
 from src.models import Session
 from flask import Blueprint, jsonify, request
 from src.models.tipo_comunicacion import Tipo_Comunicacion
+from src.utils.auth import token_requerido
 
 tipo_comunicacion_bp = Blueprint('tipo_comunicacion', __name__)
 
 @tipo_comunicacion_bp.route('/', methods=['GET'])
+@token_requerido
 def get_tipo_comunicacion():
-    tipos = Tipo_Comunicacion.get()
-    return jsonify([t.to_dict() for t in tipos])
+
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=5, type=int)
+
+    tipos, total = Tipo_Comunicacion.paginate(page, per_page)
+
+    total_pages = (total + per_page - 1) // per_page
+
+    return jsonify({
+        'data': [t.to_dict() for t in tipos],
+        'total': total,
+        'total_pages': total_pages,
+        'page': page,
+        'per_page': per_page,
+        'has_next': page < total_pages,
+        'has_prev': page > 1
+    }), 200
 
 
 @tipo_comunicacion_bp.route('/<int:id_tipo_comunicacion>', methods=['GET'])
