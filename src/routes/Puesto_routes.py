@@ -7,11 +7,11 @@ puesto_bp = Blueprint('puesto', __name__)
 
 @puesto_bp.route('/', methods=['GET'])
 @token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Getente', 'Vigilante'])
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
 def get_puesto():
 
     page = request.args.get('page', default=1, type=int)
-    per_page = request.args.get('per_page', default=5, type=int)
+    per_page = request.args.get('per_page', default=1, type=int)
 
     puesto, total = Puesto.paginate(page, per_page)
 
@@ -44,7 +44,7 @@ def get_puesto():
 
 @puesto_bp.route('/<int:id_puesto>', methods=['GET'])
 @token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Getente', 'Vigilante'])
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
 def get_puesto_by_id(id_puesto):
     puesto = Puesto.get_by_id(id_puesto)
     if puesto:
@@ -66,7 +66,7 @@ def get_puesto_by_id(id_puesto):
     
 @puesto_bp.route('/', methods=['POST'])
 @token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
+@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
 def create_puesto():
     data = request.get_json()
     puesto = Puesto(
@@ -153,4 +153,4 @@ def update_puesto(id_puesto):
         return jsonify({'error': 'Error al guardar el puesto en la base de datos'}), 500
 
     return jsonify({'message': 'Puesto creado exitosamente', 'puesto': puesto.to_dict()}), 201
-    
+    f

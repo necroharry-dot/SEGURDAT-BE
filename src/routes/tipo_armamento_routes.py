@@ -8,11 +8,11 @@ tipo_armamento_bp = Blueprint('tipo_armamento', __name__)
 
 @tipo_armamento_bp.route('/', methods=['GET'])
 @token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
+@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def get_tipo_armamento():
 
     page = request.args.get('page', default=1, type=int)
-    per_page = request.args.get('per_page', default=5, type=int)
+    per_page = request.args.get('per_page', default=20, type=int)
 
     tipo_armamentos, total = Tipo_Armamento.paginate(page, per_page)
 
@@ -41,7 +41,7 @@ def get_tipo_armamento():
 
 @tipo_armamento_bp.route('/<int:id_tipo_armamento>', methods=['GET'])
 @token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
+@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def get_tipo_armamento_by_id(id_tipo_armamento):
     tipo_armamento = Tipo_Armamento.get_by_id(id_tipo_armamento)
 
@@ -114,7 +114,7 @@ def update_tipo_armamento(id_tipo_armamento):
 
 @tipo_armamento_bp.route('/<int:id_tipo_armamento>', methods=['DELETE'])
 @token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
+@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
 def delete_tipo_armamento(id_tipo_armamento):
     tipo_armamento = Tipo_Armamento.get_by_id(id_tipo_armamento)
 

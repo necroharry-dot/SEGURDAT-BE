@@ -2,12 +2,13 @@ from sqlalchemy.exc import IntegrityError
 from src.models import Session
 from flask import Blueprint, jsonify, request
 from src.models.tipo_comunicacion import Tipo_Comunicacion
-from src.utils.auth import token_requerido
+from src.utils.auth import token_requerido, cargo_requerido
 
 tipo_comunicacion_bp = Blueprint('tipo_comunicacion', __name__)
 
 @tipo_comunicacion_bp.route('/', methods=['GET'])
 @token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def get_tipo_comunicacion():
 
     page = request.args.get('page', default=1, type=int)
@@ -29,6 +30,8 @@ def get_tipo_comunicacion():
 
 
 @tipo_comunicacion_bp.route('/<int:id_tipo_comunicacion>', methods=['GET'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def get_tipo_comunicacion_by_id(id_tipo_comunicacion):
     tipo = Tipo_Comunicacion.get_by_id(id_tipo_comunicacion)
 
@@ -41,6 +44,8 @@ def get_tipo_comunicacion_by_id(id_tipo_comunicacion):
 
 
 @tipo_comunicacion_bp.route('/', methods=['POST'])
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def create_tipo_comunicacion():
     data = request.get_json()
 
@@ -68,7 +73,8 @@ def create_tipo_comunicacion():
 
 
 @tipo_comunicacion_bp.route('/<int:id_tipo_comunicacion>', methods=['PUT'])
-
+@token_requerido
+@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def update_tipo_comunicacion(id_tipo_comunicacion):
     tipo = Tipo_Comunicacion.get_by_id(id_tipo_comunicacion)
 

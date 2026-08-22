@@ -41,9 +41,7 @@ def get_usuarios():
             'eps': usuario.eps,
             'fondo_pension': usuario.fondo_pension,
             'id_cargo': usuario.id_cargo,
-            'usuario': usuario.usuario,
             'correo_electronico': usuario.correo_electronico,
-            'contrasena': usuario.contrasena
         })
     return jsonify(usuarios_list), 200
 
@@ -63,9 +61,8 @@ def get_usuario_by_id(id_usuario):
             'eps': usuario.eps,
             'fondo_pension': usuario.fondo_pension,
             'id_cargo': usuario.id_cargo,
-            'usuario': usuario.usuario,
             'correo_electronico': usuario.correo_electronico,
-            'contrasena': usuario.contrasena
+
         }
         return jsonify(usuario_data), 200
     else:
@@ -85,9 +82,8 @@ def create_usuario():
         eps=data['eps'],
         fondo_pension=data['fondo_pension'],
         id_cargo=data['id_cargo'],
-        usuario=data['usuario'],
         correo_electronico=data['correo_electronico'],
-        contrasena=data['contrasena']
+
     )
 
     try:
@@ -120,12 +116,9 @@ def create_usuario():
         return jsonify({'error': 'El fondo de pensión no puede estar vacío'}), 400
     if usuario.id_cargo == '':
         return jsonify({'error': 'El ID del cargo no puede estar vacío'}), 400
-    if usuario.usuario == '':
-        return jsonify({'error': 'El usuario no puede estar vacío'}), 400   
     if usuario.correo_electronico == '':
         return jsonify({'error': 'El correo electrónico no puede estar vacío'}), 400
-    if usuario.contrasena == '':
-        return jsonify({'error': 'La contraseña no puede estar vacía'}), 400
+
     
 
     usuario.save()
@@ -148,9 +141,8 @@ def update_usuario(id_usuario):
     usuario.eps = data.get('eps', usuario.eps)
     usuario.fondo_pension = data.get('fondo_pension', usuario.fondo_pension)
     usuario.id_cargo = data.get('id_cargo', usuario.id_cargo)
-    usuario.usuario = data.get('usuario', usuario.usuario)
     usuario.correo_electronico = data.get('correo_electronico', usuario.correo_electronico)
-    usuario.contrasena = data.get('contrasena', usuario.contrasena)
+
 
     try:
         int(usuario.documento_identidad)
@@ -182,12 +174,9 @@ def update_usuario(id_usuario):
         return jsonify({'error': 'El fondo de pensión no puede estar vacío'}), 400
     if usuario.id_cargo == '':
         return jsonify({'error': 'El ID del cargo no puede estar vacío'}), 400
-    if usuario.usuario == '':
-        return jsonify({'error': 'El usuario no puede estar vacío'}), 400
     if usuario.correo_electronico == '':
         return jsonify({'error': 'El correo electrónico no puede estar vacío'}), 400
-    if usuario.contrasena == '':
-        return jsonify({'error': 'La contraseña no puede estar vacía'}), 400
+
     
     usuario.save()
     return jsonify({'message': 'Usuario actualizado exitosamente', 'usuario': usuario.to_dict()}), 200

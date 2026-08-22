@@ -9,7 +9,7 @@ armamento_bp = Blueprint('armamento', __name__)
 @cargo_requerido(['Administrador', 'Supervisor', 'Gerente'])
 def get_armamento():
     page = request.args.get('page', default=1, type=int)
-    per_page = request.args.get('per_page', default=5, type=int)
+    per_page = request.args.get('per_page', default=3, type=int)
 
     armamento, total = Armamento.paginate(page=page, per_page=per_page)
 
