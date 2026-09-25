@@ -6,8 +6,8 @@ from src.utils.auth import token_requerido, cargo_requerido
 comunicacion_bp = Blueprint('comunicacion', __name__)
 
 @comunicacion_bp.route('/', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def get_comunicacion():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=3, type=int)
@@ -42,8 +42,8 @@ def get_comunicacion():
 
 
 @comunicacion_bp.route('/<int:id_comunicacion>', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
 def get_comunicacion_by_id(id_comunicacion):
     comunicacion = Comunicacion.get_by_id(id_comunicacion)
     if comunicacion:
@@ -62,8 +62,8 @@ def get_comunicacion_by_id(id_comunicacion):
         return jsonify({'error': 'Comunicacion no encontrada'}), 404
     
 @comunicacion_bp.route('/', methods=['POST'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def create_comunicacion():
     data = request.get_json()
     comunicacion = Comunicacion(
@@ -102,8 +102,8 @@ def create_comunicacion():
     return jsonify({'message': 'Comunicacion creada exitosamente', 'comunicacion': comunicacion.to_dict()}), 201
 
 @comunicacion_bp.route('/<int:id_comunicacion>', methods=['PUT'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente'])
 def update_comunicacion(id_comunicacion):
     comunicacion = Comunicacion.get_by_id(id_comunicacion)
     if not comunicacion:

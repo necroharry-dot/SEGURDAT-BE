@@ -6,8 +6,8 @@ from src.utils.auth import token_requerido, cargo_requerido
 puesto_bp = Blueprint('puesto', __name__)
 
 @puesto_bp.route('/', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
 def get_puesto():
 
     page = request.args.get('page', default=1, type=int)
@@ -43,8 +43,8 @@ def get_puesto():
     return jsonify(puesto_list), 200
 
 @puesto_bp.route('/<int:id_puesto>', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Supervisor', 'Administrador', 'Gerente', 'Vigilante'])
 def get_puesto_by_id(id_puesto):
     puesto = Puesto.get_by_id(id_puesto)
     if puesto:
@@ -65,8 +65,8 @@ def get_puesto_by_id(id_puesto):
         return jsonify({'error': 'Puesto no encontrado'}), 404
     
 @puesto_bp.route('/', methods=['POST'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
 def create_puesto():
     data = request.get_json()
     puesto = Puesto(
@@ -106,8 +106,8 @@ def create_puesto():
     return jsonify({'message': 'Puesto creado exitosamente', 'puesto': puesto.to_dict()}), 201
 
 @puesto_bp.route('/<int:id_puesto>', methods=['PUT'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
 def update_puesto(id_puesto):
     puesto = Puesto.get_by_id(id_puesto)
     if puesto:

@@ -5,8 +5,8 @@ from src.utils.auth import token_requerido, cargo_requerido
 revista_puesto_bp = Blueprint('revista_puesto', __name__)
 
 @revista_puesto_bp.route('/', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
 def get_revista_puesto():
 
     page = request.args.get('page', default=1, type=int)
@@ -42,8 +42,8 @@ def get_revista_puesto():
     return jsonify(revista_puesto_list), 200
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
 def get_revista_puesto_by_id(id_revista_puesto):
     revista_puesto = Revista_puesto.get_by_id(id_revista_puesto)
     if revista_puesto:
@@ -63,8 +63,8 @@ def get_revista_puesto_by_id(id_revista_puesto):
         return jsonify({'error': 'Revista de puesto no encontrada'}), 404
 
 @revista_puesto_bp.route('/', methods=['POST'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
 def create_revista_puesto():
     data = request.get_json()
 
@@ -105,8 +105,8 @@ def create_revista_puesto():
     }), 201
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['PUT'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
 def update_revista_puesto(id_revista_puesto):
     revista_puesto = Revista_puesto.get_by_id(id_revista_puesto)
     if not revista_puesto:

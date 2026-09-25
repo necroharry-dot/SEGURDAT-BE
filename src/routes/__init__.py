@@ -1,3 +1,4 @@
+# llamado de los blueprints de las rutas de la aplicacion
 from .Armamento_routes import armamento_bp
 from .Cargo_routes import cargo_bp
 from .Comunicacion_routes import comunicacion_bp
@@ -9,7 +10,7 @@ from .revista_puesto_routes import revista_puesto_bp
 from .auth_routes import auth_bp
 
 
-
+# listado de todos los blueprints de la aplicacion
 all_blueprints = [
     armamento_bp,
     cargo_bp,

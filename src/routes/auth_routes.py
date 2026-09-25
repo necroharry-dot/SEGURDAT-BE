@@ -33,7 +33,7 @@ def register():
         'usuario': usuario.to_dict()
     }), 201
 
-
+# metodo para el inicio de sesión de usuarios
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json() or {}
@@ -49,7 +49,7 @@ def login():
 
     if not usuario or not usuario.verificar_password(password):
         return jsonify({'error': 'Correo electrónico o contraseña incorrectos'}), 401
-
+# metodo para generar un token de acceso para un usuario registrado
     return jsonify({
         'access_token': generar_token(usuario),
         'token_type': 'Bearer',
@@ -59,6 +59,6 @@ def login():
 
 
 @auth_bp.route('/me', methods=['GET'])
-@token_requerido
+#@token_requerido
 def me():
     return jsonify({'usuario': request.usuario.to_dict()}), 200

@@ -1,7 +1,9 @@
+#llamado de librerias necesarias para la creacion del modelo armamento y la conexion a la base de datos
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine,func
 from src.models import Base, Session
 from src.models.tipo_armamento import Tipo_Armamento
 
+#clase armamento que representa la tabla armamento en la base de datos
 class Armamento(Base):
     __tablename__ = 'armamento'
 
@@ -15,11 +17,10 @@ class Armamento(Base):
     numero_cartuchos = Column(Integer, nullable=False)
     id_tipo_armamento = Column(Integer, ForeignKey('tipo_armamento.id_tipo_armamento'), nullable=False)
 
-
+    #constructor de la clase armamento que inicializa los atributos de la clase
     def __init__(self, numero_serial, numero_salvo, 
                  fecha_vencimiento, estado, calibre, fabricante, 
                  numero_cartuchos, id_tipo_armamento):
-        
         self.numero_serial = numero_serial
         self.numero_salvo = numero_salvo
         self.fecha_vencimiento = fecha_vencimiento
@@ -28,30 +29,26 @@ class Armamento(Base):
         self.fabricante = fabricante
         self.numero_cartuchos = numero_cartuchos
         self.id_tipo_armamento = id_tipo_armamento 
-
+ # metodo para guardar un objeto armamento en la base de datos
     def save(self):
         Session.add(self)
         Session.commit()
-
+# metodo para eliminar un objeto armamento de la base de datos
     def delete(self):   
         Session.delete(self)
         Session.commit()
-    
+# metodos de clase para obtener objetos armamento de la base de datos    
     def get():
         armamento = Session.query(Armamento).all()
         return armamento
-    
+# metodo de clase para obtener un objeto armamento por su id
     def get_by_id(id_armamento):
         armamento = Session.query(Armamento).filter_by(id_armamento=id_armamento).first()
         return armamento
-    
+        
     def get_by_numero_serial(numero_serial):
         return Session.query(Armamento).filter_by(numero_serial=numero_serial).first()
     
-    def get_by_numero_salvo(numero_salvo):
-        return Session.query(Armamento).filter_by(numero_salvo=numero_salvo).first()
-
-
     def get_by_numero_salvo(numero_salvo):
         return Session.query(Armamento).filter_by(numero_salvo=numero_salvo).first()
         

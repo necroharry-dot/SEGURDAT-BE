@@ -5,7 +5,7 @@ from src.utils.auth import token_requerido
 usuarios_bp = Blueprint('usuarios', __name__)
 
 @usuarios_bp.route('/', methods=['GET'])
-@token_requerido
+#@token_requerido
 def get_usuarios():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=5, type=int)

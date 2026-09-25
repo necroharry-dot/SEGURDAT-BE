@@ -7,8 +7,8 @@ tipo_armamento_bp = Blueprint('tipo_armamento', __name__)
 
 
 @tipo_armamento_bp.route('/', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def get_tipo_armamento():
 
     page = request.args.get('page', default=1, type=int)
@@ -40,8 +40,8 @@ def get_tipo_armamento():
 
 
 @tipo_armamento_bp.route('/<int:id_tipo_armamento>', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def get_tipo_armamento_by_id(id_tipo_armamento):
     tipo_armamento = Tipo_Armamento.get_by_id(id_tipo_armamento)
 
@@ -83,8 +83,8 @@ def create_tipo_armamento():
 
 
 @tipo_armamento_bp.route('/<int:id_tipo_armamento>', methods=['PUT'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
 def update_tipo_armamento(id_tipo_armamento):
     tipo_armamento = Tipo_Armamento.get_by_id(id_tipo_armamento)
 
@@ -113,8 +113,8 @@ def update_tipo_armamento(id_tipo_armamento):
 
 
 @tipo_armamento_bp.route('/<int:id_tipo_armamento>', methods=['DELETE'])
-@token_requerido
-@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
 def delete_tipo_armamento(id_tipo_armamento):
     tipo_armamento = Tipo_Armamento.get_by_id(id_tipo_armamento)
 

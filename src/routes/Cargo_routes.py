@@ -6,8 +6,8 @@ from src.utils.auth import token_requerido, cargo_requerido
 cargo_bp = Blueprint('cargo', __name__)
 
 @cargo_bp.route('/', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Gerente', 'Coordinador', 'Administrador', 'Supervisor'])
+#@token_requerido
+#@cargo_requerido(['Gerente', 'Coordinador', 'Administrador', 'Supervisor'])
 def get_cargo():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=20, type=int)
@@ -40,8 +40,8 @@ def get_cargo():
     return jsonify(cargo_list), 200
 
 @cargo_bp.route('/<int:id_cargo>', methods=['GET'])
-@token_requerido
-@cargo_requerido(['Gerente', 'Coordinador', 'Administrador', 'Supervisor'])
+#@token_requerido
+#@cargo_requerido(['Gerente', 'Coordinador', 'Administrador', 'Supervisor'])
 def get_cargo_by_id(id_cargo):
     cargo = Cargo.get_by_id(id_cargo)
     if cargo:
@@ -54,8 +54,8 @@ def get_cargo_by_id(id_cargo):
         return jsonify({'error': 'Cargo no encontrado'}), 404
 
 @cargo_bp.route('/', methods=['POST'])
-@token_requerido
-@cargo_requerido(['Gerente', 'Coordinador', 'Administrador'])
+#@token_requerido
+#@cargo_requerido(['Gerente', 'Coordinador', 'Administrador'])
 def create_cargo():
     data = request.get_json()
 
@@ -74,8 +74,8 @@ def create_cargo():
     return jsonify({'message': 'Cargo creado exitosamente', 'cargo': cargo.to_dict()}), 201
 
 @cargo_bp.route('/<int:id_cargo>', methods=['PUT'])
-@token_requerido
-@cargo_requerido(['Gerente', 'Coordinador', 'Administrador'])
+#@token_requerido
+#@cargo_requerido(['Gerente', 'Coordinador', 'Administrador'])
 def update_cargo(id_cargo):
     cargo = Cargo.get_by_id(id_cargo)
     if not cargo:
@@ -97,8 +97,8 @@ def update_cargo(id_cargo):
     return jsonify({'message': 'Cargo actualizado exitosamente', 'cargo': cargo.to_dict()}), 200
 
 @cargo_bp.route('/<int:id_cargo>', methods=['DELETE'])
-@token_requerido
-@cargo_requerido(['Gerente', 'Coordinador', 'Administrador'])
+#@token_requerido
+#@cargo_requerido(['Gerente', 'Coordinador', 'Administrador'])
 def delete_cargo(id_cargo):
     cargo = Cargo.get_by_id(id_cargo)
     if not cargo:
