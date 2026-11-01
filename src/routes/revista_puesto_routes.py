@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import IntegrityError
 from src.models.revista_puesto import Revista_puesto
 from src.utils.auth import token_requerido, cargo_requerido
 
@@ -6,7 +7,7 @@ revista_puesto_bp = Blueprint('revista_puesto', __name__)
 
 @revista_puesto_bp.route('/', methods=['GET'])
 #@token_requerido
-#@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente',])
 def get_revista_puesto():
 
     page = request.args.get('page', default=1, type=int)
@@ -43,7 +44,7 @@ def get_revista_puesto():
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['GET'])
 #@token_requerido
-#@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
 def get_revista_puesto_by_id(id_revista_puesto):
     revista_puesto = Revista_puesto.get_by_id(id_revista_puesto)
     if revista_puesto:
@@ -64,7 +65,7 @@ def get_revista_puesto_by_id(id_revista_puesto):
 
 @revista_puesto_bp.route('/', methods=['POST'])
 #@token_requerido
-#@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def create_revista_puesto():
     data = request.get_json()
 
@@ -97,7 +98,10 @@ def create_revista_puesto():
         id_puesto=data['id_puesto']
     )
 
-    revista_puesto.save()
+    try:
+        revista_puesto.save()
+    except IntegrityError:
+        return jsonify({'error': 'El usuario, tipo de armamento, tipo de comunicación o puesto indicado no existe'}), 400
 
     return jsonify({
         'message': 'Revista de puesto creada exitosamente',
@@ -106,7 +110,7 @@ def create_revista_puesto():
 
 @revista_puesto_bp.route('/<int:id_revista_puesto>', methods=['PUT'])
 #@token_requerido
-#@cargo_requerido(['Coordinador', 'Administrador', 'Getente',])
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def update_revista_puesto(id_revista_puesto):
     revista_puesto = Revista_puesto.get_by_id(id_revista_puesto)
     if not revista_puesto:
@@ -141,6 +145,9 @@ def update_revista_puesto(id_revista_puesto):
         return jsonify({'error': 'La geolocalización no puede estar vacía'}), 400
     
 
-    revista_puesto.save()
+    try:
+        revista_puesto.save()
+    except IntegrityError:
+        return jsonify({'error': 'El usuario, tipo de armamento, tipo de comunicación o puesto indicado no existe'}), 400
     return jsonify({'message': 'Revista de puesto actualizada exitosamente', 'revista_puesto': revista_puesto.to_dict()}), 200
 

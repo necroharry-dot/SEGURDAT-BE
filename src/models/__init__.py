@@ -7,7 +7,6 @@ import pymysql
 
 
 #controlador encargado de la conexion a la base de datos
-engine = create_engine("mysql+pymysql://root@localhost:3306/SEGURDAT?charset=utf8mb4")
 
 connection = engine.connect()
 

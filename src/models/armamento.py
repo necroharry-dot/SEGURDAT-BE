@@ -1,3 +1,4 @@
+from sqlalchemy.exc import SQLAlchemyError
 #llamado de librerias necesarias para la creacion del modelo armamento y la conexion a la base de datos
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine,func
 from src.models import Base, Session
@@ -31,12 +32,21 @@ class Armamento(Base):
         self.id_tipo_armamento = id_tipo_armamento 
  # metodo para guardar un objeto armamento en la base de datos
     def save(self):
-        Session.add(self)
-        Session.commit()
+        try:
+            Session.add(self)
+            Session.commit()
+        except SQLAlchemyError:
+            # deshace la transacción fallida para que la sesión siga funcionando
+            Session.rollback()
+            raise
 # metodo para eliminar un objeto armamento de la base de datos
-    def delete(self):   
-        Session.delete(self)
-        Session.commit()
+    def delete(self):
+        try:
+            Session.delete(self)
+            Session.commit()
+        except SQLAlchemyError:
+            Session.rollback()
+            raise
 # metodos de clase para obtener objetos armamento de la base de datos    
     def get():
         armamento = Session.query(Armamento).all()

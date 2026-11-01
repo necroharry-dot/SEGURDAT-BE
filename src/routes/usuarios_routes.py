@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from src.models.usuarios import Usuarios
+from sqlalchemy.exc import IntegrityError
 from src.utils.auth import token_requerido
 
 usuarios_bp = Blueprint('usuarios', __name__)
@@ -46,6 +47,7 @@ def get_usuarios():
     return jsonify(usuarios_list), 200
 
 @usuarios_bp.route('/<int:id_usuario>', methods=['GET'])
+#@token_requerido
 def get_usuario_by_id(id_usuario):
     usuario = Usuarios.get_by_id(id_usuario)
     if usuario:
@@ -69,6 +71,7 @@ def get_usuario_by_id(id_usuario):
         return jsonify({'error': 'Usuario no encontrado'}), 404
     
 @usuarios_bp.route('/', methods=['POST'])
+#@token_requerido
 def create_usuario():
     data = request.get_json()
     usuario = Usuarios(
@@ -121,10 +124,14 @@ def create_usuario():
 
     
 
-    usuario.save()
+    try:
+        usuario.save()
+    except IntegrityError:
+        return jsonify({'error': 'Ya existe un usuario con ese documento de identidad o correo electrónico'}), 409
     return jsonify({'message': 'Usuario creado exitosamente', 'usuario': usuario.to_dict()}), 201
 
 @usuarios_bp.route('/<int:id_usuario>', methods=['PUT'])
+#@token_requerido
 def update_usuario(id_usuario):
     usuario = Usuarios.get_by_id(id_usuario)
     if not usuario:
@@ -178,7 +185,10 @@ def update_usuario(id_usuario):
         return jsonify({'error': 'El correo electrónico no puede estar vacío'}), 400
 
     
-    usuario.save()
+    try:
+        usuario.save()
+    except IntegrityError:
+        return jsonify({'error': 'Ya existe un usuario con ese documento de identidad o correo electrónico'}), 409
     return jsonify({'message': 'Usuario actualizado exitosamente', 'usuario': usuario.to_dict()}), 200
     
     

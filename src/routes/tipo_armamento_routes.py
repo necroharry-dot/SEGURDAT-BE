@@ -57,6 +57,8 @@ def get_tipo_armamento_by_id(id_tipo_armamento):
 
 
 @tipo_armamento_bp.route('/', methods=['POST'])
+#@token_requerido
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def create_tipo_armamento():
     data = request.get_json()
 
@@ -84,7 +86,7 @@ def create_tipo_armamento():
 
 @tipo_armamento_bp.route('/<int:id_tipo_armamento>', methods=['PUT'])
 #@token_requerido
-#@cargo_requerido(['Coordinador', 'Administrador', 'Getente', 'Supervisor'])
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente', 'Supervisor'])
 def update_tipo_armamento(id_tipo_armamento):
     tipo_armamento = Tipo_Armamento.get_by_id(id_tipo_armamento)
 

@@ -11,8 +11,8 @@ class Revista_puesto(Base):
 
     id_revista_puesto = Column(Integer, primary_key=True, autoincrement=True)
     id_usuario = Column(Integer, ForeignKey('usuarios.id_usuario'), nullable=False)
-    id_tipo_armamento = Column(Integer, ForeignKey('armamento.id_tipo_armamento'), nullable=False)
-    id_tipo_comunicacion = Column(Integer, ForeignKey('comunicacion.id_tipo_comunicacion'), nullable=False)
+    id_armamento = Column(Integer, ForeignKey("armamento.id_armamento"), nullable=False)
+    id_comunicacion = Column(Integer, ForeignKey("comunicacion.id_comunicacion"), nullable=False)
     obervaciones = Column(String(255), nullable=True)
     recomendaciones = Column(String(255), nullable=True)
     novedades = Column(String(255), nullable=True)
@@ -22,11 +22,11 @@ class Revista_puesto(Base):
     def __init__(
         self,
         id_usuario,
-        id_tipo_armamento,id_tipo_comunicacion,obervaciones=None,
+        id_armamento,id_tipo_comunicacion,obervaciones=None,
         recomendaciones=None,novedades=None,geolocalizacion=None,id_puesto=None
     ):
         self.id_usuario = id_usuario
-        self.id_tipo_armamento = id_tipo_armamento
+        self.id_armamento = id_armamento
         self.id_tipo_comunicacion = id_tipo_comunicacion
         self.obervaciones = obervaciones
         self.recomendaciones = recomendaciones
@@ -35,12 +35,21 @@ class Revista_puesto(Base):
         self.id_puesto = id_puesto
 
     def save(self):
-        Session.add(self)
-        Session.commit()
+        try:
+            Session.add(self)
+            Session.commit()
+        except SQLAlchemyError:
+            # deshace la transacción fallida para que la sesión siga funcionando
+            Session.rollback()
+            raise
 
     def delete(self):
-        Session.delete(self)
-        Session.commit()
+        try:
+            Session.delete(self)
+            Session.commit()
+        except SQLAlchemyError:
+            Session.rollback()
+            raise
 
     @staticmethod
     def get():

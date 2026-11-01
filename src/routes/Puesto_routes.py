@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from src.models.puesto import Puesto
 from src.utils.auth import token_requerido, cargo_requerido
 
@@ -107,44 +108,41 @@ def create_puesto():
 
 @puesto_bp.route('/<int:id_puesto>', methods=['PUT'])
 #@token_requerido
-#@cargo_requerido(['Coordinador', 'Administrador', 'Getente'])
+#@cargo_requerido(['Coordinador', 'Administrador', 'Gerente'])
 def update_puesto(id_puesto):
     puesto = Puesto.get_by_id(id_puesto)
-    if puesto:
-        data = request.get_json()
-        puesto.nombre_puesto = data['nombre_puesto']
-        puesto.direccion_puesto = data.get('direccion_puesto')
-        puesto.encargado_puesto = data.get('encargado_puesto')
-        puesto.numero_encargado = data.get('numero_encargado')
-        puesto.nit_puesto = data.get('nit_puesto')
-        puesto.email_puesto = data.get('email_puesto')
-        puesto.descripcion_puesto = data.get('descripcion_puesto')
-        puesto.georef_puesto = data.get('georef_puesto')
-        puesto.id_armamento_puesto = data.get('id_armamento_puesto')
+    if not puesto:
+        return jsonify({'error': 'Puesto no encontrado'}), 404
 
+    data = request.get_json() or {}
+    puesto.nombre_puesto = data.get('nombre_puesto', puesto.nombre_puesto)
+    puesto.direccion_puesto = data.get('direccion_puesto', puesto.direccion_puesto)
+    puesto.encargado_puesto = data.get('encargado_puesto', puesto.encargado_puesto)
+    puesto.numero_encargado = data.get('numero_encargado', puesto.numero_encargado)
+    puesto.nit_puesto = data.get('nit_puesto', puesto.nit_puesto)
+    puesto.email_puesto = data.get('email_puesto', puesto.email_puesto)
+    puesto.descripcion_puesto = data.get('descripcion_puesto', puesto.descripcion_puesto)
+    puesto.georef_puesto = data.get('georef_puesto', puesto.georef_puesto)
+    puesto.id_armamento_puesto = data.get('id_armamento_puesto', puesto.id_armamento_puesto)
 
-        try:
-            int(puesto.numero_encargado)
-        except ValueError:
-            return jsonify({'error': 'El número de encargado debe ser un entero'}), 400
-        
-        if puesto.nombre_puesto == "":
-            return jsonify({'error': 'El nombre del puesto no puede estar vacío'}), 400
-        if puesto.direccion_puesto == "":
-            return jsonify({'error': 'La dirección del puesto no puede estar vacía'}), 400
-        if puesto.encargado_puesto == "":
-            return jsonify({'error': 'El encargado del puesto no puede estar vacío'}), 400
-        if puesto.numero_encargado == "":
-            return jsonify({'error': 'El número del encargado no puede estar vacío'}), 400
-        if puesto.nit_puesto == "":
-            return jsonify({'error': 'El NIT del puesto no puede estar vacío'}), 400
-        if puesto.email_puesto == "":
-            return jsonify({'error': 'El email del puesto no puede estar vacío'}), 400
-        if puesto.descripcion_puesto == "":
-            return jsonify({'error': 'La descripción del puesto no puede estar vacía'}), 400
+    try:
+        int(puesto.numero_encargado)
+    except (ValueError, TypeError):
+        return jsonify({'error': 'El número de encargado debe ser un entero'}), 400
 
-        puesto.save()
-    from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+    if puesto.nombre_puesto == "":
+        return jsonify({'error': 'El nombre del puesto no puede estar vacío'}), 400
+    if puesto.direccion_puesto == "":
+        return jsonify({'error': 'La dirección del puesto no puede estar vacía'}), 400
+    if puesto.encargado_puesto == "":
+        return jsonify({'error': 'El encargado del puesto no puede estar vacío'}), 400
+    if puesto.nit_puesto == "":
+        return jsonify({'error': 'El NIT del puesto no puede estar vacío'}), 400
+    if puesto.email_puesto == "":
+        return jsonify({'error': 'El email del puesto no puede estar vacío'}), 400
+    if puesto.descripcion_puesto == "":
+        return jsonify({'error': 'La descripción del puesto no puede estar vacía'}), 400
+
     try:
         puesto.save()
     except IntegrityError:
@@ -152,5 +150,4 @@ def update_puesto(id_puesto):
     except SQLAlchemyError:
         return jsonify({'error': 'Error al guardar el puesto en la base de datos'}), 500
 
-    return jsonify({'message': 'Puesto creado exitosamente', 'puesto': puesto.to_dict()}), 201
-    f
+    return jsonify({'message': 'Puesto actualizado exitosamente', 'puesto': puesto.to_dict()}), 200

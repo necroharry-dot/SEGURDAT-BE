@@ -1,3 +1,4 @@
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import Column, Integer, String, func
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.models import Base, Session
@@ -23,8 +24,13 @@ class Usuarios_Log(Base):
         return check_password_hash(self.password_hash, password)
 
     def save(self):
-        Session.add(self)
-        Session.commit()
+        try:
+            Session.add(self)
+            Session.commit()
+        except SQLAlchemyError:
+            # deshace la transacción fallida para que la sesión siga funcionando
+            Session.rollback()
+            raise
 
     @staticmethod
     def get_by_email(email):

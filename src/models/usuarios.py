@@ -1,3 +1,4 @@
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
 from src.models import Base, Session
 from src.models.cargo import Cargo
@@ -37,12 +38,21 @@ class Usuarios(Base):
 
 
     def save(self):
-        Session.add(self)
-        Session.commit()
+        try:
+            Session.add(self)
+            Session.commit()
+        except SQLAlchemyError:
+            # deshace la transacción fallida para que la sesión siga funcionando
+            Session.rollback()
+            raise
 
-    def delete(self):   
-        Session.delete(self)
-        Session.commit()
+    def delete(self):
+        try:
+            Session.delete(self)
+            Session.commit()
+        except SQLAlchemyError:
+            Session.rollback()
+            raise
     
     def get():
         usuarios = Session.query(Usuarios).all()

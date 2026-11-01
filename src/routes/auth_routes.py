@@ -59,6 +59,6 @@ def login():
 
 
 @auth_bp.route('/me', methods=['GET'])
-#@token_requerido
+@token_requerido
 def me():
     return jsonify({'usuario': request.usuario.to_dict()}), 200

@@ -113,7 +113,7 @@ def create_armamento():
     if salvo:
         return jsonify({
             'error': 'este numero de salvoconducto ya se encuentra registrado en la base de datos.'
-        })
+        }), 400
 
 
     armamento.save()
