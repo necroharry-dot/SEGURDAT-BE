@@ -7,6 +7,7 @@ import pymysql
 
 
 #controlador encargado de la conexion a la base de datos
+engine = create_engine("mysql+pymysql://avnadmin:AVNS_qr922-5ScO163GXtpbG@segurdat-sql-segurdat.j.aivencloud.com:19682/defaultdb")
 
 connection = engine.connect()
 
